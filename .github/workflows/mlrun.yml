@@ -3,7 +3,7 @@ on: [issue_comment]
 
 jobs:
   submit-project:
-    if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/train')
+    if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/test')
     runs-on: ubuntu-latest
 
     steps:
