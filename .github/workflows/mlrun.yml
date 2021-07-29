@@ -28,5 +28,5 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         CMD: ${{ github.event.comment.body}}  
         COMMIT: ${{ github.sha}}
-    - name: echo out an environment variable
+    - name: echo out an environment secret
       run: echo ${{ secrets.SLACK_WEBHOOK }}
