@@ -2,7 +2,7 @@ name: mlrun-project-workflow
 on: [issue_comment]
 
 jobs:
-  submit-project:
+  test-project:
     if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/test')
     runs-on: ubuntu-latest
 
@@ -32,7 +32,7 @@ jobs:
       run: echo ${{ secrets.SLACK_WEBHOOK }}
 
   deploy-to-production:
-    if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/deploy')
+    if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/run')
     runs-on: ubuntu-latest
 
     steps:
