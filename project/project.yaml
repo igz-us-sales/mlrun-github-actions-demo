@@ -6,27 +6,27 @@ spec:
   - url: components/gen_iris.py
     name: gen-iris
     kind: job
-    image: mlrun/mlrun
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
   - url: hub://describe
     name: describe
     kind: job
-    image: mlrun/mlrun
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
   - url: hub://sklearn_classifier
     name: train
     kind: job
-    image: mlrun/mlrun
-  - url: hub://test_classifier
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+  - url: components/test_classifier.py
     name: test
     kind: job
-    image: mlrun/mlrun
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
   - url: hub://model_server
     name: serving
     kind: serving
-    image: mlrun/mlrun
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
   - url: hub://model_server_tester
     name: live_tester
     kind: serving
-    image: mlrun/mlrun
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
   workflows:
   - name: train
     path: pipelines/train.py
