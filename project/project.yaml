@@ -1,0 +1,38 @@
+kind: project
+metadata:
+  name: gitops-project
+spec:
+  functions:
+  - url: components/gen_iris.py
+    name: gen-iris
+    kind: job
+    image: mlrun/mlrun
+  - url: hub://describe
+    name: describe
+    kind: job
+    image: mlrun/mlrun
+  - url: hub://sklearn_classifier
+    name: train
+    kind: job
+    image: mlrun/mlrun
+  - url: hub://test_classifier
+    name: test
+    kind: job
+    image: mlrun/mlrun
+  - url: hub://model_server
+    name: serving
+    kind: serving
+    image: mlrun/mlrun
+  - url: hub://model_server_tester
+    name: live_tester
+    kind: serving
+    image: mlrun/mlrun
+  workflows:
+  - name: train
+    path: pipelines/train.py
+  artifacts: []
+  artifact_path: v3io:///users/{{run.user}}/pipe/{{workflow.uid}}
+  source: ''
+  subpath: ''
+  origin_url: ''
+  desired_state: online
