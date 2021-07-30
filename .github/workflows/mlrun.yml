@@ -1,11 +1,14 @@
 name: mlrun-project-workflow
-on: [issue_comment]
+on: 
+  push:
+    branches:
+      - "main"
+      - "feature/*"
 
 jobs:
-  submit-project:
-    if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/run')
+  training-or-retraning:
     runs-on: ubuntu-latest
-
+    environment: 'dev'
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.6
@@ -13,11 +16,13 @@ jobs:
       with:
         python-version: '3.6'
         architecture: 'x64'
-    
+
+    - name: echo out github.event.issue.number
+      run: echo ${{github.event.issue.number}}    
     - name: Install mlrun
       run: python -m pip install mlrun
     - name: Submit project
-      run: python -m mlrun project ./ --git-issue "${{github.event.issue.number}}" --git-repo ${GITHUB_REPOSITORY} -w -x commit=${COMMIT:33} -r main ${CMD:5}
+      run: python -m mlrun project ./ --git-repo ${GITHUB_REPOSITORY} -w -x commit=${COMMIT:33} -r main
       env:
         V3IO_USERNAME: ${{ secrets.V3IO_USERNAME }}
         V3IO_PASSWORD: ${{ secrets.V3IO_USERNAME }}
@@ -28,5 +33,62 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         CMD: ${{ github.event.comment.body}}  
         COMMIT: ${{ github.sha}}
-    - name: echo out an environment variable
-      run: echo ${{ secrets.SLACK_WEBHOOK }}
+
+  deploy-to-qa:
+    runs-on: ubuntu-latest
+    environment: 'qa'
+    needs: training-or-retraning
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.6'
+        architecture: 'x64'
+
+    - name: echo out github.event.issue.number
+      run: echo ${{github.event.issue.number}}    
+    - name: Install mlrun
+      run: python -m pip install mlrun
+    - name: Submit project
+      run: python -m mlrun project ./ --git-repo ${GITHUB_REPOSITORY} -w -x commit=${COMMIT:33} -r main
+      env:
+        V3IO_USERNAME: ${{ secrets.V3IO_USERNAME }}
+        V3IO_PASSWORD: ${{ secrets.V3IO_USERNAME }}
+        V3IO_API: ${{ secrets.V3IO_API }}
+        V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
+        MLRUN_DBPATH: ${{ secrets.MLRUN_DBPATH }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        CMD: ${{ github.event.comment.body}}  
+        COMMIT: ${{ github.sha}}
+
+
+  deploy-to-production:
+    runs-on: ubuntu-latest
+    environment: 'prod'
+    needs: [training-or-retraning, deploy-to-qa]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.6'
+        architecture: 'x64'
+
+    - name: echo out github.event.issue.number
+      run: echo ${{github.event.issue.number}}    
+    - name: Install mlrun
+      run: python -m pip install mlrun
+    - name: Submit project
+      run: python -m mlrun project ./ --git-repo ${GITHUB_REPOSITORY} -w -x commit=${COMMIT:33} -r main
+      env:
+        V3IO_USERNAME: ${{ secrets.V3IO_USERNAME }}
+        V3IO_PASSWORD: ${{ secrets.V3IO_USERNAME }}
+        V3IO_API: ${{ secrets.V3IO_API }}
+        V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
+        MLRUN_DBPATH: ${{ secrets.MLRUN_DBPATH }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        CMD: ${{ github.event.comment.body}}  
+        COMMIT: ${{ github.sha}}

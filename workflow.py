@@ -1,7 +1,6 @@
 from kfp import dsl
 from mlrun import mount_v3io, NewTask
 
-
 funcs = {}
 this_project = None
 DATASET = 'iris_dataset'
