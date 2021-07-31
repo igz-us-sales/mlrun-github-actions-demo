@@ -19,17 +19,19 @@ spec:
     name: test
     kind: job
     image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
-  - url: hub://model_server
+  - url: hub://v2_model_server
     name: serving
     kind: serving
     image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
-  - url: hub://model_server_tester
+  - url: components/model_server_tester.py
     name: live_tester
-    kind: serving
+    kind: nuclio
     image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
   workflows:
   - name: train
     path: pipelines/train.py
+  - name: deploy
+    path: pipelines/deploy.py
   artifacts: []
   artifact_path: v3io:///users/{{run.user}}/pipe/{{workflow.uid}}
   source: ''
