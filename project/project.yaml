@@ -11,7 +11,7 @@ spec:
     name: describe
     kind: job
     image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
-  - url: hub://sklearn_classifier
+  - url: components/sklearn_classifier.py
     name: train
     kind: job
     image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
