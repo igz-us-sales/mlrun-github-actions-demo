@@ -15,5 +15,4 @@ def init_context(context):
 def handler(context, event):
     data = json.dumps({'inputs': [random.choice(context.data)]})
     requests.post(url=context.addr, data=data)
-    sleep(random.uniform(0.2, 1.7))
     return 

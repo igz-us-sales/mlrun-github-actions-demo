@@ -15,8 +15,11 @@ def init_functions(functions: dict, project=None, secrets=None):
         
     # Enable model monitoring
     functions["serving"].set_tracking()
-    functions["live_tester"].add_trigger('cron', nuclio.triggers.CronTrigger(interval="1s"))
-
+    functions["live-tester"].add_trigger('cron', nuclio.triggers.CronTrigger(interval="1s"))
+    functions["drift-watcher"].add_v3io_stream_trigger(name="stream",
+                                                       stream_path=f"projects/{project.metadata.name}/model-endpoints/log_stream",
+                                                       seek_to="latest")
+    
 @dsl.pipeline(
     name="Demo training pipeline",
     description="Shows how to use mlrun."
@@ -30,4 +33,7 @@ def kfpipeline(
                                           tag=this_project.params.get('commit', 'v1'))
 
     # test out new model server (via REST API calls)
-    tester = funcs["live_tester"].deploy_step(env={"addr" : deploy.outputs["endpoint"],"model_path" : model_path})
+    tester = funcs["live-tester"].deploy_step(env={"addr" : deploy.outputs["endpoint"],"model_path" : model_path})
+    
+    # drift watcher to post on github
+    watcher = funcs["drift-watcher"].deploy_step().after(deploy)

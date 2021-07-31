@@ -58,12 +58,3 @@ def kfpipeline(
                 "comparison_metric": "accuracy",
                 "post_github" : True},
         inputs={"test_set"    : train.outputs['test_set']})
-
-#     # deploy our model as a serverless function
-#     deploy = funcs["serving"].deploy_step(models={f"{DATASET}_v1": train.outputs['model']},
-#                                           tag=this_project.params.get('commit', 'v1'))
-
-#     # test out new model server (via REST API calls)
-#     tester = funcs["live_tester"].as_step(name='model-tester',
-#         params={'addr': deploy.outputs['endpoint'], 'model': f"{DATASET}_v1"},
-#         inputs={'table': train.outputs['test_set']})
