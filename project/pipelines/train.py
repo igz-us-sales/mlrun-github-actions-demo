@@ -58,7 +58,3 @@ def kfpipeline(
                 "post_github" : True},
         inputs={"test_set"    : train.outputs['test_set']})
 
-
-    # deploy our model as a serverless function
-    deploy = funcs["serving"].deploy_step(models={f"{DATASET}_v1": train.outputs['model']},
-                                          tag=this_project.params.get('commit', 'v1'))
