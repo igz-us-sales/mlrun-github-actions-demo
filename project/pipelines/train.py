@@ -10,17 +10,15 @@ LABELS  = "label"
 def init_functions(functions: dict, project=None, secrets=None):
     for f in functions.values():
         f.apply(mount_v3io())
-     
-    # uncomment this line to collect the inference results into a stream
-    # and specify a path in V3IO (<datacontainer>/<subpath>)
-    #functions['serving'].set_env('INFERENCE_STREAM', 'users/admin/model_stream')
+        f.set_env("GITHUB_TOKEN", secrets.get("GITHUB_TOKEN"))
 
-    
 @dsl.pipeline(
     name="Demo training pipeline",
     description="Shows how to use mlrun."
 )
-def kfpipeline():
+def kfpipeline(
+    existing_model_path:str="None"
+):
     
     # run the ingestion function with the new image and params
     ingest = funcs['gen-iris'].as_step(
@@ -52,9 +50,14 @@ def kfpipeline():
     # test and visualize our model
     test = funcs["test"].as_step(
         name="test",
-        params={"label_column": LABELS},
-        inputs={"models_path" : train.outputs['model'],
-                "test_set"    : train.outputs['test_set']})
+        handler="test_classifier",
+        params={"label_column": LABELS,
+                "new_model_path" : train.outputs['model'],
+                "existing_model_path" : existing_model_path,
+                "comparison_metric": "accuracy",
+                "post_github" : True},
+        inputs={"test_set"    : train.outputs['test_set']})
+
 
     # deploy our model as a serverless function
     deploy = funcs["serving"].deploy_step(models={f"{DATASET}_v1": train.outputs['model']},
