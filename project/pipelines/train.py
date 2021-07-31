@@ -36,6 +36,7 @@ def kfpipeline(
     # train with hyper-paremeters
     train = funcs["train"].as_step(
         name="train",
+        handler="train_model",
         params={"sample"          : -1,
                 "label_column"    : LABELS,
                 "test_size"       : 0.10},
