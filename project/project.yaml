@@ -6,30 +6,32 @@ spec:
   - url: components/gen_iris.py
     name: gen-iris
     kind: job
-    image: mlrun/mlrun
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
   - url: hub://describe
     name: describe
     kind: job
-    image: mlrun/mlrun
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
   - url: hub://sklearn_classifier
     name: train
     kind: job
-    image: mlrun/mlrun
-  - url: hub://test_classifier
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+  - url: components/test_classifier.py
     name: test
     kind: job
-    image: mlrun/mlrun
-  - url: hub://model_server
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+  - url: hub://v2_model_server
     name: serving
     kind: serving
-    image: mlrun/mlrun
-  - url: hub://model_server_tester
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+  - url: components/model_server_tester.py
     name: live_tester
-    kind: serving
-    image: mlrun/mlrun
+    kind: nuclio
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
   workflows:
   - name: train
     path: pipelines/train.py
+  - name: deploy
+    path: pipelines/deploy.py
   artifacts: []
   artifact_path: v3io:///users/{{run.user}}/pipe/{{workflow.uid}}
   source: ''
