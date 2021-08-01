@@ -11,7 +11,7 @@ spec:
     name: describe
     kind: job
     image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
-  - url: hub://sklearn_classifier
+  - url: components/sklearn_classifier.py
     name: train
     kind: job
     image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
@@ -24,7 +24,11 @@ spec:
     kind: serving
     image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
   - url: components/model_server_tester.py
-    name: live_tester
+    name: live-tester
+    kind: nuclio
+    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+  - url: components/drift_watcher.py
+    name: drift-watcher
     kind: nuclio
     image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
   workflows:
