@@ -1,4 +1,4 @@
-name: mlrun-project-workflow
+name: model-monitorinng-workflow
 on: [issue_comment]
 
 jobs:
