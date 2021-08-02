@@ -7,7 +7,6 @@ jobs:
     #if: startsWith(github.event.comment.body, '/production')    
     runs-on: ubuntu-latest
     environment: 'prod'
-    needs: [drife-dected, training-workflow]
     steps:
     - name: echo github.event.comment.body
       run: echo ${{github.event.comment.body}}    
