@@ -1,5 +1,11 @@
 name: model-monitorinng-workflow
-on: [issue_comment]
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
 
 jobs:
   model-drift-trigger:
