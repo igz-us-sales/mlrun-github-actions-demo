@@ -38,6 +38,8 @@ jobs:
         COMMIT: ${{ github.sha}}
 
   deploy-to-qa:
+    name: deploy-to-qa
+    if: startsWith(github.event.comment.body, '/qa')
     runs-on: ubuntu-latest
     environment: 'qa'
     needs: training-or-retraning
@@ -68,6 +70,8 @@ jobs:
 
 
   deploy-to-production:
+    name: deploy-to-production
+    if: startsWith(github.event.comment.body, '/production')    
     runs-on: ubuntu-latest
     environment: 'prod'
     needs: [training-or-retraning, deploy-to-qa]
