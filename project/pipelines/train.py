@@ -56,6 +56,6 @@ def kfpipeline(
                 "new_model_path" : train.outputs['model'],
                 "existing_model_path" : existing_model_path,
                 "comparison_metric": "accuracy",
-                "post_github" : False},
+                "post_github" : True},
         inputs={"test_set"    : train.outputs['test_set']})
 
