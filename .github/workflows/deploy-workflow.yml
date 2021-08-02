@@ -1,5 +1,11 @@
 name: deploy-workflow
-on: [issue_comment]
+on: 
+  workflow_dispatch:
+    inputs:
+      existing_model_path:
+        description: 'Deploy new model'     
+        required: false
+        default: 'None'
 
 jobs:
   deploy-workflow:
@@ -21,8 +27,13 @@ jobs:
       run: echo ${{github.event.issue.number}}    
     - name: Install mlrun
       run: python -m pip install mlrun
-    - name: Submit project
-      run: echo python -m mlrun project ./project --secrets env=GITHUB_TOKEN --git-repo ${GITHUB_REPOSITORY} -w -x commit=${COMMIT:33} -r train
+    - name: deploy the new mpodel
+      run: |
+        python -m mlrun project ./project \
+        --secrets env=GITHUB_TOKEN \
+        --git-repo ${GITHUB_REPOSITORY} \
+        -w -x commit=${COMMIT:33} -r deploy \
+        -a model_path=${{ github.event.inputs.model_path}}
       env:
         V3IO_USERNAME: ${{ secrets.V3IO_USERNAME }}
         V3IO_PASSWORD: ${{ secrets.V3IO_USERNAME }}

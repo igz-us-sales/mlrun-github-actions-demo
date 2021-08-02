@@ -67,11 +67,6 @@ jobs:
     - name: Training model
 
       run: |
-        echo -m mlrun project ./project \
-        --secrets env=GITHUB_TOKEN \
-        --git-repo ${GITHUB_REPOSITORY} \
-        -w -x commit=${COMMIT:33} -r train \
-        -a existing_model_path=${{ github.event.inputs.existing_model_path}}
         python -m mlrun project ./project \
         --secrets env=GITHUB_TOKEN \
         --git-repo ${GITHUB_REPOSITORY} \
