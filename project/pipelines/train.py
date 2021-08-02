@@ -17,7 +17,8 @@ def init_functions(functions: dict, project=None, secrets=None):
     description="Shows how to use mlrun."
 )
 def kfpipeline(
-    existing_model_path:str="None"
+    existing_model_path:str="None",
+    force_deploy:bool=False,
 ):
     
     # run the ingestion function with the new image and params
@@ -56,5 +57,6 @@ def kfpipeline(
                 "new_model_path" : train.outputs['model'],
                 "existing_model_path" : existing_model_path,
                 "comparison_metric": "accuracy",
-                "post_github" : True},
+                "post_github" : True,
+                "force_deploy" : force_deploy},
         inputs={"test_set"    : train.outputs['test_set']})

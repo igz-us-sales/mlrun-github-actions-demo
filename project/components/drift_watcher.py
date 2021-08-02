@@ -13,11 +13,25 @@ def format_issue(body, model_endpoint):
     return issue
     
 def create_issue(body, model_endpoint):
+    # Format GitHub issue with drift notification results
     issue = format_issue(body, model_endpoint)
     
+    # Authenticate repo
     g = Github(login_or_token=os.getenv("GITHUB_TOKEN"))
     repo = g.get_organization("igz-us-sales").get_repo("mlrun-github-actions-demo")
+    
+    # Create issue
     repo.create_issue(f"Drift Detected - {body['drift_status']}", body=issue, assignee="nschenone")
+    
+    # Trigger re-training
+    trigger_retrain(repo, model_endpoint.spec.model_uri)
+
+def trigger_retrain(repo, existing_model_path):
+    retrain_workflow = [x for x in repo.get_workflows() if x.name == "train-workflow"][0]
+    retrain_workflow.create_dispatch(
+        ref="master",
+        inputs={"existing_model_path" : existing_model_path}
+    )
 
 def init_context(context):
     context.db = get_run_db()
