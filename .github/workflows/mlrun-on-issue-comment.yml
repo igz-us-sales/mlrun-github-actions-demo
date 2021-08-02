@@ -4,10 +4,13 @@ on: [issue_comment]
 jobs:
   training-or-retraning:
     name: training-or-retraining
-    if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/train')
+    #if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/train')
     runs-on: ubuntu-latest
     environment: 'dev'
     steps:
+    - name: echo github.event.comment.body
+      run: echo ${{github.event.comment.body}}    
+
     - uses: actions/checkout@v2
     - name: Set up Python 3.6
       uses: actions/setup-python@v1
