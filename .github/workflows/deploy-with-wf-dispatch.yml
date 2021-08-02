@@ -11,7 +11,7 @@ jobs:
   deploy-workflow:
     name: deploy-model
     #if: startsWith(github.event.comment.body, '/production')    
-    runs-on: ubuntu-latest
+    runs-on: mlrun/mlrun
     environment: 'prod'
     steps:
     - name: echo github.event.comment.body
@@ -25,8 +25,7 @@ jobs:
 
     - name: echo out github.event.issue.number
       run: echo ${{github.event.issue.number}}    
-    - name: Install mlrun
-      run: python -m pip install mlrun
+
     - name: Submit project
       run: echo python -m mlrun project ./project --secrets env=GITHUB_TOKEN --git-repo ${GITHUB_REPOSITORY} -w -x commit=${COMMIT:33} -r train
       env:
