@@ -66,7 +66,11 @@ jobs:
         --git-repo ${GITHUB_REPOSITORY} \
         -w -x commit=${COMMIT:33} -r train \
         -a ${CMD}
-
+        echo python -m mlrun project ./project \
+        --secrets env=GITHUB_TOKEN \
+        --git-repo ${GITHUB_REPOSITORY} \
+        -w -x commit=${COMMIT:33} -r train \
+        -a ${CMD}
       env:
         V3IO_USERNAME: ${{ secrets.V3IO_USERNAME }}
         V3IO_PASSWORD: ${{ secrets.V3IO_USERNAME }}
