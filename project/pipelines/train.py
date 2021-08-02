@@ -58,4 +58,3 @@ def kfpipeline(
                 "comparison_metric": "accuracy",
                 "post_github" : True},
         inputs={"test_set"    : train.outputs['test_set']})
-
