@@ -1,5 +1,11 @@
 name: training-workflow
-on: [issue_comment]
+on: 
+  workflow_dispatch:
+    inputs:
+      existing_model_path:
+        description: 'Model path of existing model for comparison'     
+        required: false
+        default: 'None'
 
 jobs:
   drife-dected:
@@ -61,16 +67,16 @@ jobs:
     - name: Training model
 
       run: |
+        echo -m mlrun project ./project \
+        --secrets env=GITHUB_TOKEN \
+        --git-repo ${GITHUB_REPOSITORY} \
+        -w -x commit=${COMMIT:33} -r train \
+        -a ${{ github.event.inputs.existing_model_path}}
         python -m mlrun project ./project \
         --secrets env=GITHUB_TOKEN \
         --git-repo ${GITHUB_REPOSITORY} \
         -w -x commit=${COMMIT:33} -r train \
-        -a ${CMD}
-        echo python -m mlrun project ./project \
-        --secrets env=GITHUB_TOKEN \
-        --git-repo ${GITHUB_REPOSITORY} \
-        -w -x commit=${COMMIT:33} -r train \
-        -a ${CMD}
+        -a ${{ github.event.inputs.existing_model_path}}
       env:
         V3IO_USERNAME: ${{ secrets.V3IO_USERNAME }}
         V3IO_PASSWORD: ${{ secrets.V3IO_USERNAME }}
