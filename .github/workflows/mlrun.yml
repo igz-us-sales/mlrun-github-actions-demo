@@ -2,8 +2,7 @@ name: mlrun-project-workflow
 on: 
   push:
     branches:
-      - "master"
-      - "feature/*"
+      - "main"
 
 jobs:
   training-or-retraning:
