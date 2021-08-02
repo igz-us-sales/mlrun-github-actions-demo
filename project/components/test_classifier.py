@@ -15,6 +15,8 @@ from mlrun.mlutils.models import eval_model_v2
 from cloudpickle import load
 from urllib.request import urlopen
 
+from github import Github
+
 def eval_model(context, xtest, ytest, model):
     ypred = model.predict(xtest)
     metrics = {
@@ -35,15 +37,28 @@ def format_issue(model_name, models):
     return body
 
 def create_issue(context, models, comparison_metric):
-    body = "/trainresults\n"
+    # Format GitHub issue with train run results
     body += format_issue("new_model", models)
     if "existing_model" in models:
         body += format_issue("existing_model", models)
 
-    from github import Github
+    # Authenticate repo
     g = Github(login_or_token=os.getenv("GITHUB_TOKEN"))
     repo = g.get_organization("igz-us-sales").get_repo("mlrun-github-actions-demo")
+    
+    # Create issue
     repo.create_issue(f'Train Results - Run {context.uid}', body=body, assignee="nschenone")
+
+    # Trigger deployment based on model metrics
+    if context.get_param("force_deploy") or models["new_model"]["metrics"][comparison_metric] > models["existing_model"]["metrics"][comparison_metric]:
+        trigger_deployment(repo, models["new_model"]["model_path"])
+    
+def trigger_deployment(repo, model_path):
+    deploy_workflow = [x for x in repo.get_workflows() if x.name == "deploy-workflow"][0]
+    deploy_workflow.create_dispatch(
+        ref="master",
+        inputs={"model_path" : model_path}
+    )
 
 def test_classifier(
     context,
