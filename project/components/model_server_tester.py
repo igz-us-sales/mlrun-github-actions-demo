@@ -8,7 +8,8 @@ from mlrun.datastore import get_store_resource
 def init_context(context):
     context.addr = os.getenv("addr") + "/v2/models/model/infer"
     context.model_path = os.getenv("model_path")
-    context.data_path = f"store://datasets/gitops-project/train_test_set@{context.model_path.split('@')[1]}"
+#     context.data_path = f"store://datasets/gitops-project/train_test_set@{context.model_path.split('@')[1]}"
+    context.data_path = f"store://datasets/gitops-project/train_test_set:{context.model_path.split(':')[1]}"
     df = get_store_resource(context.data_path).to_dataitem().as_df().drop("label", axis=1)
     context.data = df.values.tolist()
 
