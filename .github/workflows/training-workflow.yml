@@ -8,9 +8,8 @@ on:
         default: 'None'
 
 jobs:
-  drife-dected:
+  drift-dected:
     name: drift-trigged
-    #if: startsWith(github.event.comment.body, '/train')
     runs-on: ubuntu-latest
     environment: 'dev'
     steps:
@@ -42,11 +41,9 @@ jobs:
 
   training-workflow:
     name: training-model
-    #if: startsWith(github.event.comment.body, '/train')
     runs-on: ubuntu-latest
-    container: mlrun/mlrun:0.6.5
     environment: 'qa'
-    needs: [drife-dected]
+    needs: [drift-dected]
     steps:
     - name: echo github.event.comment.body
       run: echo ${{github.event.comment.body}}    
@@ -60,8 +57,8 @@ jobs:
 
     - name: echo out github.event.issue.number
       run: echo ${{github.event.issue.number}}    
-#     - name: Install mlrun
-#       run: python -m pip install mlrun
+    - name: Install mlrun
+      run: python -m pip install mlrun
     - name: Training model
 
       run: |
