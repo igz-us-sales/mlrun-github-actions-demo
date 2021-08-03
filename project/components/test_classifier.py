@@ -37,10 +37,13 @@ def format_issue(model_name, models):
     return body
 
 def create_issue(context, models, comparison_metric):
+    deploy_new_model=True
+    
     # Format GitHub issue with train run results
-    body += format_issue("new_model", models)
+    body = format_issue("new_model", models)
     if "existing_model" in models:
         body += format_issue("existing_model", models)
+        deploy_new_model = models["new_model"]["metrics"][comparison_metric] > models["existing_model"]["metrics"][comparison_metric]
 
     # Authenticate repo
     g = Github(login_or_token=os.getenv("GITHUB_TOKEN"))
@@ -50,7 +53,7 @@ def create_issue(context, models, comparison_metric):
     repo.create_issue(f'Train Results - Run {context.uid}', body=body, assignee="nschenone")
 
     # Trigger deployment based on model metrics
-    if context.get_param("force_deploy") or models["new_model"]["metrics"][comparison_metric] > models["existing_model"]["metrics"][comparison_metric]:
+    if context.get_param("force_deploy") or deploy_new_model:
         trigger_deployment(repo, models["new_model"]["model_path"])
     
 def trigger_deployment(repo, model_path):
