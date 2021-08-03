@@ -13,8 +13,8 @@ def init_functions(functions: dict, project=None, secrets=None):
         f.set_env("GITHUB_TOKEN", secrets.get("GITHUB_TOKEN"))
 
 @dsl.pipeline(
-    name="Demo training pipeline",
-    description="Shows how to use mlrun."
+    name="GitOps Training Pipeline",
+    description="Train a model"
 )
 def kfpipeline(
     existing_model_path:str="None",

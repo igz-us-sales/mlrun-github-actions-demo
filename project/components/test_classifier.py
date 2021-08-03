@@ -54,14 +54,16 @@ def create_issue(context, models, comparison_metric):
 
     # Trigger deployment based on model metrics
     if context.get_param("force_deploy") or deploy_new_model:
-        trigger_deployment(repo, models["new_model"]["model_path"])
+        trigger_deployment(context, repo, models["new_model"]["model_path"])
     
-def trigger_deployment(repo, model_path):
+def trigger_deployment(context, repo, model_path):
+    context.logger.info("TRIGGER_DEPLOYMENT")
     deploy_workflow = [x for x in repo.get_workflows() if x.name == "deploy-workflow"][0]
     deploy_workflow.create_dispatch(
         ref="master",
         inputs={"model_path" : model_path}
     )
+    context.logger.info(deploy_workflow)
 
 def test_classifier(
     context,
