@@ -2,9 +2,9 @@ name: deploy-workflow
 on: 
   workflow_dispatch:
     inputs:
-      existing_model_path:
-        description: 'Deploy new model'     
-        required: false
+      model_path:
+        description: 'Deploy new model path'     
+        required: true
         default: 'None'
 
 jobs:
