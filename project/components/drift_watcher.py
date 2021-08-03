@@ -27,7 +27,7 @@ def create_issue(body, model_endpoint):
     trigger_retrain(repo, model_endpoint.spec.model_uri)
 
 def trigger_retrain(repo, existing_model_path):
-    retrain_workflow = [x for x in repo.get_workflows() if x.name == "train-workflow"][0]
+    retrain_workflow = [x for x in repo.get_workflows() if x.name == "training-workflow"][0]
     retrain_workflow.create_dispatch(
         ref="master",
         inputs={"existing_model_path" : existing_model_path}
