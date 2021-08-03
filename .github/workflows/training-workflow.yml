@@ -68,7 +68,7 @@ jobs:
 
       run: |
         python -m mlrun project ./project \
-        --secrets env=GITHUB_TOKEN \
+        --secrets env=MY_GITHUB_TOKEN \
         --git-repo ${GITHUB_REPOSITORY} \
         -w -x commit=${COMMIT:33} -r ./project/pipelines/train.py \
         -a existing_model_path=${{ github.event.inputs.existing_model_path}}
@@ -79,6 +79,7 @@ jobs:
         V3IO_ACCESS_KEY: ${{ secrets.V3IO_ACCESS_KEY }}
         MLRUN_DBPATH: ${{ secrets.MLRUN_DBPATH }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }} 
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         CMD: ${{ github.event.comment.body}}  
         COMMIT: ${{ github.sha}}
