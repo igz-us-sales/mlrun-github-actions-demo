@@ -11,7 +11,7 @@ LABELS  = "label"
 def init_functions(functions: dict, project=None, secrets=None):
     for f in functions.values():
         f.apply(mount_v3io())
-        f.set_env("GITHUB_TOKEN", secrets.get("GITHUB_TOKEN"))
+        f.set_env("GITHUB_TOKEN", secrets.get("MY_GITHUB_TOKEN"))
         
     # Enable model monitoring
     functions["serving"].set_tracking()
