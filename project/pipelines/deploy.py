@@ -21,11 +21,11 @@ def init_functions(functions: dict, project=None, secrets=None):
                                                        seek_to="latest")
     
 @dsl.pipeline(
-    name="Demo training pipeline",
-    description="Shows how to use mlrun."
+    name="GitOps Deployment Pipeline",
+    description="Deploy a model."
 )
 def kfpipeline(
-    model_path:str
+    model_path:str="None"
 ):
 
     # deploy our model as a serverless function
