@@ -9,8 +9,7 @@ on:
 
 jobs:
   deploy-workflow:
-    name: deploy-model
-    #if: startsWith(github.event.comment.body, '/production')    
+    name: deploy-model 
     runs-on: ubuntu-latest
     environment: 'prod'
     steps:
