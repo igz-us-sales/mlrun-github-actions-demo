@@ -12,7 +12,7 @@ jobs:
     name: deploy-model
     #if: startsWith(github.event.comment.body, '/production')    
     runs-on: mlrun/mlrun
-    environment: 'prod'
+    environment: 'dev'
     steps:
     - name: echo github.event.comment.body
       run: echo ${{github.event.comment.body}}    
