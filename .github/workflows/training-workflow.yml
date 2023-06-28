@@ -62,7 +62,7 @@ jobs:
     - name: Training model
 
       run: |
-        python -m mlrun project ./project \
+        python -m mlrun project ./ \
         --secrets env=MY_GITHUB_TOKEN \
         --git-repo ${GITHUB_REPOSITORY} \
         -w -x commit=${COMMIT:33} -r ./project/pipelines/train.py \
