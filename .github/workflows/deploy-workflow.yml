@@ -31,6 +31,7 @@ jobs:
         python -m mlrun project ./project \
         --secrets env=MY_GITHUB_TOKEN \
         --git-repo ${GITHUB_REPOSITORY} \
+        --git-issue 1 \
         -w -x commit=${COMMIT:33} -r ./pipelines/deploy.py \
         -a model_path=${{ github.event.inputs.model_path}}
       env:
