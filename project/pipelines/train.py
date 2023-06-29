@@ -35,19 +35,29 @@ def kfpipeline(
         inputs={"table": ingest.outputs[DATASET]})
     
     # train with hyper-paremeters
+    # train = funcs["train"].as_step(
+    #     name="train",
+    #     handler="train_model",
+    #     params={"sample"          : -1,
+    #             "label_column"    : LABELS,
+    #             "test_size"       : 0.10},
+    #     hyperparams={'model_pkg_class': ["sklearn.ensemble.RandomForestClassifier",
+    #                                      "sklearn.linear_model.LogisticRegression",
+    #                                      "sklearn.ensemble.AdaBoostClassifier"]},
+    #     selector='max.accuracy',
+    #     inputs={"dataset"         : ingest.outputs[DATASET]},
+    #     labels={"commit": this_project.params.get('commit', '')},
+    #     outputs=['model', 'test_set'])
     train = funcs["train"].as_step(
         name="train",
         handler="train_model",
-        params={"sample"          : -1,
-                "label_column"    : LABELS,
-                "test_size"       : 0.10},
-        hyperparams={'model_pkg_class': ["sklearn.ensemble.RandomForestClassifier",
-                                         "sklearn.linear_model.LogisticRegression",
-                                         "sklearn.ensemble.AdaBoostClassifier"]},
-        selector='max.accuracy',
-        inputs={"dataset"         : ingest.outputs[DATASET]},
-        labels={"commit": this_project.params.get('commit', '')},
-        outputs=['model', 'test_set'])
+        inputs={"dataset": ingest.outputs[DATASET]},
+        params={
+            "label_column": LABELS,
+            "test_size" : 0.10
+        },
+        outputs=['model', 'test_set']
+    )
 
     # test and visualize our model
     test = funcs["test"].as_step(
@@ -57,6 +67,6 @@ def kfpipeline(
                 "new_model_path" : train.outputs['model'],
                 "existing_model_path" : existing_model_path,
                 "comparison_metric": "accuracy",
-                "post_github" : False,
+                "post_github" : True,
                 "force_deploy" : force_deploy},
         inputs={"test_set"    : train.outputs['test_set']})

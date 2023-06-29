@@ -79,51 +79,51 @@ def test_classifier(
 ) -> None:
 
     # Load test data
-    # print(test_set)
-    # xtest = test_set.as_df()
-    # ytest = xtest.pop(label_column)
+    print(test_set)
+    xtest = test_set.as_df()
+    ytest = xtest.pop(label_column)
 
     # Build model name/path/metrics dict
     models = {}
     models["new_model"] = {"model_path" : new_model_path}
     
 #     # Evaluate existing model if parameter is passed
-#     if context.get_param("existing_model_path"):
-#         models["existing_model"] = {"model_path" : context.get_param("existing_model_path")}
+    if context.get_param("existing_model_path"):
+        models["existing_model"] = {"model_path" : context.get_param("existing_model_path")}
 
-#     for model_name, model_config in models.items():
-#         # Load model
-#         try:
-#             model_file, model_obj, _ = get_model(model_config["model_path"], suffix=".pkl")
-#             model_obj = load(open(model_file, "rb"))
-#         except Exception as a:
-#             raise Exception("model location likely specified")
+    for model_name, model_config in models.items():
+        # Load model
+        try:
+            model_file, model_obj, _ = get_model(model_config["model_path"], suffix=".pkl")
+            model_obj = load(open(model_file, "rb"))
+        except Exception as a:
+            raise Exception("model location likely specified")
 
-#         # Evalaute
-#         ypred, metrics = eval_model(context, xtest, ytest.values, model_obj)
-#         models[model_name]["metrics"] = metrics
+        # Evalaute
+        ypred, metrics = eval_model(context, xtest, ytest.values, model_obj)
+        models[model_name]["metrics"] = metrics
         
-#         # Log metrics per model
-#         for metric, value in metrics.items():
-#             context.log_result(f"{metric}-{model_name}", value)
+        # Log metrics per model
+        for metric, value in metrics.items():
+            context.log_result(f"{metric}-{model_name}", value)
         
-#         # Update model artifact with metrics
-#         if model_obj and model_update == True:
-#             update_model(
-#                 model_config["model_path"],
-#                 metrics=metrics,
-#                 key_prefix="validation-",
-#             )
+        # Update model artifact with metrics
+        if model_obj and model_update == True:
+            update_model(
+                model_config["model_path"],
+                metrics=metrics,
+                key_prefix="validation-",
+            )
 
-#         # Get test set column names
-#         if ypred.ndim == 1 or ypred.shape[1] == 1:
-#             score_names = [predictions_column]
-#         else:
-#             score_names = [f"{predictions_column}_" + str(x) for x in range(ypred.shape[1])]
+        # Get test set column names
+        if ypred.ndim == 1 or ypred.shape[1] == 1:
+            score_names = [predictions_column]
+        else:
+            score_names = [f"{predictions_column}_" + str(x) for x in range(ypred.shape[1])]
 
-#         # Log test set predictions
-#         df = pd.concat([xtest, ytest, pd.DataFrame(ypred, columns=score_names)], axis=1)
-#         context.log_dataset(f"test_set_preds-{model_name}", df=df, format="parquet", index=False)
+        # Log test set predictions
+        df = pd.concat([xtest, ytest, pd.DataFrame(ypred, columns=score_names)], axis=1)
+        context.log_dataset(f"test_set_preds-{model_name}", df=df, format="parquet", index=False)
         
     # Create GitHub issue for run
     if post_github:

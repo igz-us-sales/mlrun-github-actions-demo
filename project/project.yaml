@@ -12,7 +12,7 @@ spec:
     name: describe
     kind: job
     image: docker-registry.default-tenant.app.cst-353.iguazio-cd1.com/gitops-image:latest
-  - url: components/sklearn_classifier.py
+  - url: components/train.py
     name: train
     kind: job
     image: docker-registry.default-tenant.app.cst-353.iguazio-cd1.com/gitops-image:latest
