@@ -65,7 +65,7 @@ jobs:
         python -m mlrun project ./project \
         --secrets env=MY_GITHUB_TOKEN \
         --git-repo ${GITHUB_REPOSITORY} \
-        --git-issue 1
+        --git-issue 1 \
         -w -x commit=${COMMIT:33} -r ./pipelines/train.py \
         -a existing_model_path=${{ github.event.inputs.existing_model_path}}
       env:
