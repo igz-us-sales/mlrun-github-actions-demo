@@ -15,8 +15,9 @@ from mlrun.mlutils.data import get_sample, get_splits
 from mlrun.mlutils.models import gen_sklearn_model, eval_model_v2
 from mlrun.utils.helpers import create_class
 from mlrun.artifacts.model import ModelArtifact
+import mlrun
 
-
+@mlrun.handler(outputs=["model", "test_set"])
 def train_model(
     context: MLClientCtx,
     model_pkg_class: str,
@@ -79,6 +80,7 @@ def train_model(
     )
 
     test_set = pd.concat([xtest, ytest.to_frame()], axis=1)
+
     context.log_dataset(
         test_set_key,
         df=test_set,
@@ -105,9 +107,10 @@ def train_model(
             context, xvalid, yvalid, model, plots_artifact_path=plots_path
         )
     else:
-        eval_metrics = eval_model_v2(
-            context, xvalid, yvalid, model, plots_artifact_path=plots_path
-        )
+        # eval_metrics = eval_model_v2(
+        #     context, xvalid, yvalid, model, plots_artifact_path=plots_path
+        # )
+        eval_metrics = 0
 
     kwargs = {}
     if "algorithm" in ModelArtifact._dict_fields:
@@ -132,3 +135,5 @@ def train_model(
         framework="sklearn",
         **kwargs
     )
+
+    return model, test_set

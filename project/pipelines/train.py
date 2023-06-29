@@ -1,5 +1,5 @@
 from kfp import dsl
-from mlrun import mount_v3io, NewTask
+from mlrun import mount_v3io
 
 funcs = {}
 this_project = None

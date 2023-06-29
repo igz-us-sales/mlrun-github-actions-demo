@@ -9,7 +9,8 @@ def init_context(context):
     context.addr = os.getenv("addr") + "/v2/models/model/infer"
     context.model_path = os.getenv("model_path")
 #     context.data_path = f"store://datasets/gitops-project/train_test_set@{context.model_path.split('@')[1]}"
-    context.data_path = f"store://datasets/gitops-project/train_test_set:{context.model_path.split(':')[2]}"
+    # context.data_path = f"store://datasets/gitops-project/train_test_set:{context.model_path.split(':')[2]}"
+    context.data_path = f"store://datasets/gitops-project/get-data_iris_dataset#0:latest"
     df = get_store_resource(context.data_path).to_dataitem().as_df().drop("label", axis=1)
     context.data = df.values.tolist()
 

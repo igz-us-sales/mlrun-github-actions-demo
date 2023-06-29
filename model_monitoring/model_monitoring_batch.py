@@ -264,6 +264,7 @@ class BatchProcessor:
                 container=self.stream_container,
                 stream_path=self.stream_path,
                 shard_count=1,
+                raise_for_status=[204, 409]
             )
         except Exception as e:
             if "ResourceInUseException" in str(e):

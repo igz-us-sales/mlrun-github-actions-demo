@@ -1,44 +1,48 @@
 kind: project
 metadata:
   name: gitops-project
+  created: '2023-06-26T17:33:24.659000'
 spec:
   functions:
   - url: components/gen_iris.py
     name: gen-iris
     kind: job
-    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+    image: docker-registry.default-tenant.app.cst-353.iguazio-cd1.com/gitops-image:latest
   - url: hub://describe
     name: describe
     kind: job
-    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+    image: docker-registry.default-tenant.app.cst-353.iguazio-cd1.com/gitops-image:latest
   - url: components/sklearn_classifier.py
     name: train
     kind: job
-    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+    image: docker-registry.default-tenant.app.cst-353.iguazio-cd1.com/gitops-image:latest
   - url: components/test_classifier.py
     name: test
     kind: job
-    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+    image: docker-registry.default-tenant.app.cst-353.iguazio-cd1.com/gitops-image:latest
   - url: hub://v2_model_server
     name: serving
     kind: serving
-    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+    image: docker-registry.default-tenant.app.cst-353.iguazio-cd1.com/gitops-image:latest
   - url: components/model_server_tester.py
     name: live-tester
     kind: nuclio
-    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+    image: docker-registry.default-tenant.app.cst-353.iguazio-cd1.com/gitops-image:latest
   - url: components/drift_watcher.py
     name: drift-watcher
     kind: nuclio
-    image: docker-registry.default-tenant.app.us-sales-eks.iguazio-cd0.com:80/gitops-image
+    image: docker-registry.default-tenant.app.cst-353.iguazio-cd1.com/gitops-image:latest
   workflows:
-  - name: train
-    path: pipelines/train.py
-  - name: deploy
-    path: pipelines/deploy.py
+  - path: pipelines/train.py
+    name: train
+  - path: pipelines/deploy.py
+    name: deploy
   artifacts: []
   artifact_path: v3io:///users/{{run.user}}/pipe/{{workflow.uid}}
+  conda: ''
   source: ''
-  subpath: ''
   origin_url: ''
   desired_state: online
+  owner: xingsheng
+status:
+  state: online
