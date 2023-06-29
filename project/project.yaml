@@ -1,7 +1,7 @@
 kind: project
 metadata:
-  name: gitops-project
-  created: '2023-06-26T17:33:24.659000'
+  name: gitops-project-1
+  created: '2023-06-29T22:39:23.851833'
 spec:
   functions:
   - url: components/gen_iris.py
@@ -38,10 +38,9 @@ spec:
   - path: pipelines/deploy.py
     name: deploy
   artifacts: []
-  artifact_path: v3io:///users/{{run.user}}/pipe/{{workflow.uid}}
   conda: ''
-  source: ''
-  origin_url: ''
+  source: git://github.com/igz-us-sales/mlrun-github-actions-demo.git#refs/heads/master
+  origin_url: git://github.com/igz-us-sales/mlrun-github-actions-demo.git#refs/heads/master
   desired_state: online
   owner: xingsheng
 status:

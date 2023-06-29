@@ -19,20 +19,21 @@ def init_functions(functions: dict, project=None, secrets=None):
 def kfpipeline(
     existing_model_path:str="None",
     force_deploy:bool=False,
+    data_source = "https://s3.wasabisys.com/iguazio/data/model-monitoring/iris_dataset.csv"
 ):
     
     # run the ingestion function with the new image and params
-    ingest = funcs['gen-iris'].as_step(
-        name="get-data",
-        handler='iris_generator',
-        params={'format': 'pq'},
-        outputs=[DATASET])
+    # ingest = funcs['gen-iris'].as_step(
+    #     name="get-data",
+    #     handler='iris_generator',
+    #     params={'format': 'pq'},
+    #     outputs=[DATASET])
 
     # analyze our dataset
-    describe = funcs["describe"].as_step(
-        name="summary",
-        params={"label_column": LABELS},
-        inputs={"table": ingest.outputs[DATASET]})
+    # describe = funcs["describe"].as_step(
+    #     name="summary",
+    #     params={"label_column": LABELS},
+    #     inputs={"table": data_source})
     
     # train with hyper-paremeters
     # train = funcs["train"].as_step(
@@ -51,7 +52,7 @@ def kfpipeline(
     train = funcs["train"].as_step(
         name="train",
         handler="train_model",
-        inputs={"dataset": ingest.outputs[DATASET]},
+        inputs={"dataset": data_source},
         params={
             "label_column": LABELS,
             "test_size" : 0.10

@@ -1,6 +1,6 @@
 kind: project
 metadata:
-  name: gitops-project
+  name: gitops-project-1
 spec:
   functions: []
   workflows: []
