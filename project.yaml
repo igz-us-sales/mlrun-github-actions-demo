@@ -1,11 +1,63 @@
 kind: project
 metadata:
-  name: gitops-project-1
+  name: gitops-flow
+  created: '2023-06-30T00:42:17.677000'
 spec:
-  functions: []
-  workflows: []
+  functions:
+  - url: src/project_setup.py
+    name: image-builder
+    kind: job
+    image: mlrun/mlrun:1.3.3
+    handler: assert_build
+  - url: src/functions/get_data.py
+    name: get-data
+    kind: job
+    handler: get_data
+  - url: hub://describe
+    name: describe
+    kind: job
+    handler: analyze
+  - url: src/functions/train.py
+    name: train
+    kind: job
+    handler: train_model
+  - url: src/functions/test_classifier.py
+    name: test
+    kind: job
+    handler: test_classifier
+  - url: hub://v2_model_server
+    name: serving
+    kind: serving
+    image: mlrun/mlrun:1.3.3
+    requirements: &id001
+    - mlrun==1.3.3
+    - PyGithub==1.59.0
+  - url: src/functions/simulate_traffic.py
+    name: simulate-traffic
+    kind: nuclio
+    image: mlrun/mlrun:1.3.3
+    requirements: *id001
+  - url: src/functions/drift_watcher.py
+    name: drift-watcher
+    kind: nuclio
+    image: mlrun/mlrun:1.3.3
+    requirements: *id001
+  - url: src/functions/create_drift_stream.py
+    name: create-drift-stream
+    kind: job
+    handler: create_drift_stream
+  workflows:
+  - path: src/workflows/train.py
+    name: train
+  - path: src/workflows/deploy.py
+    name: deploy
   artifacts: []
   conda: ''
-  source: git://github.com/igz-us-sales/mlrun-github-actions-demo.git#refs/heads/master
-  origin_url: git://github.com/igz-us-sales/mlrun-github-actions-demo.git#refs/heads/master
+  source: v3io:///bigdata/ghactions.zip
+  origin_url: git://github.com/igz-us-sales/mlrun-github-actions-demo.git#refs/heads/refactor
+  load_source_on_run: true
   desired_state: online
+  owner: nick
+  default_image: .mlrun/func-gitops-flow-image-builder:latest
+status:
+  state: online
