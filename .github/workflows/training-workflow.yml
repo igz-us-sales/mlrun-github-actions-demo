@@ -67,7 +67,8 @@ jobs:
         --git-repo ${GITHUB_REPOSITORY} \
         --git-issue 1 \
         -w -x commit=${COMMIT:33} \
-        -a existing_model_path=${{ github.event.inputs.existing_model_path}}
+        -a existing_model_path=${{ github.event.inputs.existing_model_path}} \
+        -a force_deploy=true
       env:
         V3IO_USERNAME: ${{ secrets.V3IO_USERNAME }}
         V3IO_PASSWORD: ${{ secrets.V3IO_USERNAME }}
