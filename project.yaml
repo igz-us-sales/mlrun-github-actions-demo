@@ -54,7 +54,7 @@ spec:
   artifacts: []
   conda: ''
   source: v3io:///bigdata/ghactions.zip
-  origin_url: git://github.com/igz-us-sales/mlrun-github-actions-demo.git#refs/heads/refactor
+  origin_url: git://github.com/igz-us-sales/mlrun-github-actions-demo#refs/heads/master
   load_source_on_run: true
   desired_state: online
   owner: nick
