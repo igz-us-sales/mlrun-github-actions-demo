@@ -4,16 +4,23 @@ from kfp import dsl
 
 
 @dsl.pipeline(name="GitOps Deployment Pipeline", description="Deploy a model")
-def pipeline(model_path: str = "None", label_column: str = "label"):
+def pipeline(model_path: str, label_column: str = "label"):
     # Get our project object
     project = mlrun.get_current_project()
 
+    # Create drift stream
+    create_stream_fn = project.get_function("create-drift-stream")
+    create_stream = project.run_function(
+        create_stream_fn,
+        params={"stream_path": f"pipelines/{project.name}/model-endpoints/log_stream"}
+    )
+    
     # Deploy model to endpoint
     serving_fn = project.get_function("serving")
     serving_fn.set_tracking()
     deploy = project.deploy_function(
         serving_fn, models=[{"key": "model", "model_path": model_path}]
-    )
+    ).after(create_stream)
 
     # Deploy a live traffic simulator
     simulate_traffic_fn = project.get_function("simulate-traffic")

@@ -48,6 +48,7 @@ def create_and_set_project(
                 name="image-builder",
                 handler="assert_build",
                 kind="job",
+                image=default_base_image
             )
             build_status = project.build_function(
                 function=image_builder,
@@ -66,14 +67,34 @@ def create_and_set_project(
 
     # Set MLRun functions
     project.set_function(
-        name="get-data", func="src/functions/get_data.py", kind="job", handler="get_data"
+        name="get-data",
+        func="src/functions/get_data.py",
+        kind="job",
+        handler="get_data",
     )
-    project.set_function(name="describe", func="hub://describe", kind="job", handler="analyze")
     project.set_function(
-        name="train", func="src/functions/train.py", kind="job", handler="train_model"
+        name="describe",
+        func="hub://describe",
+        kind="job",
+        handler="analyze",
     )
     project.set_function(
-        name="test", func="src/functions/test_classifier.py", kind="job", handler="test_classifier"
+        name="train",
+        func="src/functions/train.py",
+        kind="job",
+        handler="train_model",
+    )
+    project.set_function(
+        name="test",
+        func="src/functions/test_classifier.py",
+        kind="job",
+        handler="test_classifier",
+    )
+    project.set_function(
+        name="create-drift-stream",
+        func="src/functions/create_drift_stream.py",
+        kind="job",
+        handler="create_drift_stream",
     )
     project.set_function(
         name="serving",

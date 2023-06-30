@@ -44,7 +44,7 @@ def init_context(context):
 
 def handler(context, event):
     body = json.loads(event.body)
-    model_endpoint = context.db.get_endpoint(
+    model_endpoint = context.db.get_model_endpoint(
         project=context.project, endpoint_id=body["endpoint_id"]
     )
     create_issue(body, model_endpoint)

@@ -8,6 +8,7 @@ def pipeline(
     force_deploy: bool = False,
     source_url: str = "https://s3.wasabisys.com/iguazio/data/model-monitoring/iris_dataset.csv",
     label_column: str = "label",
+    post_github: bool = True
 ):
     # Get our project object
     project = mlrun.get_current_project()
@@ -23,7 +24,7 @@ def pipeline(
     # Analyze data
     describe_fn = project.get_function("describe")
     project.run_function(
-        describe_fn, inputs={"table": source_url}, params={"label_column": label_column}
+        describe_fn, inputs={"table": ingest.outputs["cleaned_data"]}, params={"label_column": label_column}
     )
 
     # Train model
@@ -45,7 +46,7 @@ def pipeline(
             "new_model_path": train.outputs["model"],
             "existing_model_path": existing_model_path,
             "comparison_metric": "accuracy",
-            "post_github": True,
+            "post_github": post_github,
             "force_deploy": force_deploy,
         },
     )
