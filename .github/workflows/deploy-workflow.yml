@@ -28,11 +28,11 @@ jobs:
       run: python -m pip install mlrun
     - name: deploy the new model
       run: |
-        python -m mlrun project ./project \
+        python -m mlrun project ./ --run deploy \
         --secrets env=MY_GITHUB_TOKEN \
         --git-repo ${GITHUB_REPOSITORY} \
         --git-issue 1 \
-        -w -x commit=${COMMIT:33} -r ./pipelines/deploy.py \
+        -w -x commit=${COMMIT:33} \
         -a model_path=${{ github.event.inputs.model_path}}
       env:
         V3IO_USERNAME: ${{ secrets.V3IO_USERNAME }}
